@@ -1,6 +1,6 @@
-import { Schema as _Schema, model } from "mongoose";
+const mongoose = require("mongoose");
 
-const Schema = _Schema;
+const Schema = mongoose.Schema;
 const CatalogSchema = new Schema(
   {
     name: { type: String, validate: nameValidator, required: true },
@@ -14,5 +14,5 @@ function nameValidator(val) {
   return val.length < "255";
 }
 
-const Catalog = model("Catalog", CatalogSchema);
-export default Catalog;
+const Catalog = mongoose.model("Catalog", CatalogSchema);
+module.exports = Catalog;

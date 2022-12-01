@@ -1,11 +1,11 @@
-import { Schema as _Schema, model } from "mongoose";
+const mongoose = require("mongoose");
 
-const Schema = _Schema;
+const Schema = mongoose.Schema;
 const ProductSchema = new Schema(
   {
     name: { type: String, validate: nameAndPriceValidator, required: true },
     price: { type: String, validate: nameAndPriceValidator, required: true },
-    catalogId: [{ type: Schema.Types.ObjectId, ref: "Catalog" }],
+    catalogId: { type: Schema.Types.ObjectId, ref: "Catalog" },
   },
   {
     timestamps: {
@@ -18,5 +18,5 @@ function nameAndPriceValidator(val) {
   return val.length < "255";
 }
 
-const Product = model("Product", ProductSchema);
-export default Product;
+const Product = mongoose.model("Product", ProductSchema);
+module.exports = Product;
