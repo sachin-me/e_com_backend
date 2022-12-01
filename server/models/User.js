@@ -1,6 +1,8 @@
-import { Schema as _Schema, model } from "mongoose";
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const SALT_ROUNDS = 10;
 
-const Schema = _Schema;
+const Schema = mongoose.Schema;
 const UserSchema = new Schema(
   {
     name: { type: String, validate: nameAndEmailValidator, required: true },
@@ -10,6 +12,7 @@ const UserSchema = new Schema(
       index: true,
       unique: true,
       required: true,
+      lowercase: true,
     },
     password: { type: String, required: true },
     state: { type: String },
@@ -32,8 +35,17 @@ const UserSchema = new Schema(
 );
 
 function nameAndEmailValidator(val) {
-  return val <= "255";
+  return val.length < "255";
 }
 
-const User = model("User", UserSchema);
-export default User;
+UserSchema.pre("save", function (next) {
+  if (this.password) {
+    this.password = bcrypt.hashSync(this.password, SALT_ROUNDS);
+    next();
+  } else {
+    next();
+  }
+});
+
+const User = mongoose.model("User", UserSchema);
+module.exports = User;

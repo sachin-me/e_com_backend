@@ -11,7 +11,7 @@ const CatalogSchema = new Schema(
 );
 
 function nameValidator(val) {
-  return val.length <= "255";
+  return val.length < "255";
 }
 
 const Catalog = model("Catalog", CatalogSchema);

@@ -15,7 +15,7 @@ const ProductSchema = new Schema(
 );
 
 function nameAndPriceValidator(val) {
-  return val <= "255";
+  return val.length < "255";
 }
 
 const Product = model("Product", ProductSchema);
