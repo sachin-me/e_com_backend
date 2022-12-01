@@ -99,7 +99,7 @@ module.exports = {
         });
       }
 
-      const id = user._id;
+      const { _id: id, role } = user
       const checkPassword = bcrypt.compareSync(password, user.password);
 
       if (!checkPassword) {
@@ -111,8 +111,9 @@ module.exports = {
       const token = jwt.sign(
         {
           id,
+          role
         },
-        "secret"
+        process.env.SECRET
       );
 
       res.cookie("token", token, {

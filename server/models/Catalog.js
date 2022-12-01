@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const CatalogSchema = new Schema(
   {
     name: { type: String, validate: nameValidator, required: true },
+    created_by: { type: Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: { createdAt: "created_at" },
