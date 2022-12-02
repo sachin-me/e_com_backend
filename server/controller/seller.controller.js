@@ -92,7 +92,15 @@ module.exports = {
       const { id, role } = user;
 
       if (role == "seller") {
-        const orders = await Order.find({ sellerId: id });
+        const orders = await Order.find({ sellerId: id })
+          .populate({
+            path: "buyerId sellerId",
+            select: "name email role",
+          })
+          .populate({ path: "catalog", select: "name" })
+          .populate({ path: "products", select: "name price count" })
+          .select("name price")
+          .select("-password");
         if (orders.length !== 0) {
           return res.status(200).json({
             message: "Order list fetched successfully",
@@ -110,6 +118,7 @@ module.exports = {
         });
       }
     } catch (error) {
+      console.log({ error });
       return res.status(500).json({
         error: "Something went wrong.",
       });

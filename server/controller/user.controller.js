@@ -99,7 +99,7 @@ module.exports = {
         });
       }
 
-      const { _id: id, role } = user
+      const { _id: id, role } = user;
       const checkPassword = bcrypt.compareSync(password, user.password);
 
       if (!checkPassword) {
@@ -111,7 +111,7 @@ module.exports = {
       const token = jwt.sign(
         {
           id,
-          role
+          role,
         },
         process.env.SECRET
       );
@@ -128,6 +128,7 @@ module.exports = {
           id,
           name: user.name,
           email,
+          role,
         },
       });
     } catch (error) {
