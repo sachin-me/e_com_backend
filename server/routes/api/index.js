@@ -12,5 +12,10 @@ router.post("/auth/logout", userCtrl.logout);
 router.post("/seller/create-catalog", isLoggedIn, sellerCtrl.createCatalog);
 
 router.get("/buyer/list-of-sellers", isLoggedIn, buyerCtrl.getSellersList);
+router.get(
+  "/buyer/seller-catalog/:seller_id",
+  isLoggedIn,
+  buyerCtrl.getSellerCatalog
+);
 
 module.exports = router;
