@@ -1,4 +1,6 @@
+const jwt = require("jsonwebtoken");
 const Catalog = require("../models/Catalog");
+const Order = require("../models/Order");
 const Product = require("../models/Product");
 const User = require("../models/User");
 
@@ -56,6 +58,78 @@ module.exports = {
             data: data,
           });
         }
+      }
+    } catch (error) {
+      return res.status(500).json({
+        error: "Something went wrong.",
+      });
+    }
+  },
+  createOrder: async (req, res) => {
+    try {
+      const { seller_id } = req.params;
+      const { catalogName, products } = req.body;
+      if (!catalogName && products.length == 0) {
+        return res.status(400).json({
+          error: "Name and Products are required.",
+        });
+      }
+
+      if (!catalogName) {
+        return res.status(400).json({
+          error: "Name is required.",
+        });
+      }
+      if (products.length == 0) {
+        return res.status(400).json({
+          error: "Products are required.",
+        });
+      }
+
+      let token = req.headers.cookie.split("token=");
+      token = token[token.length - 1];
+      const user = jwt.verify(token, process.env.SECRET);
+      const { id, role } = user;
+
+      if (role == "buyer") {
+        const catalog = await Catalog.findOne({ name: catalogName });
+        if (!catalog) {
+          return res.status(404).json({
+            error: "Catalog not found.",
+          });
+        } else {
+          products &&
+            products.map(async (product) => {
+              const data = await Product.findOne({ name: product.name });
+              const order = new Order({
+                count: product.count,
+                buyerId: id,
+                sellerId: seller_id,
+              });
+              const createdOrder = await order.save();
+              if (Object.keys(createdOrder).length !== 0) {
+                await Order.findOneAndUpdate(
+                  { _id: createdOrder._id },
+                  {
+                    $set: { catalog: catalog._id },
+                    $push: { products: data._id },
+                  }
+                );
+              } else {
+                return res.status(500).json({
+                  error: "Failed to create order.",
+                });
+              }
+            });
+
+          return res.status(200).json({
+            message: "Your order is placed successfully",
+          });
+        }
+      } else {
+        return res.status(401).json({
+          error: "You're not authorised to create a order.",
+        });
       }
     } catch (error) {
       return res.status(500).json({

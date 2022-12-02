@@ -4,9 +4,10 @@ const Schema = mongoose.Schema;
 const OrderSchema = new Schema(
   {
     count: { type: Number, default: 0 },
-    userId: { type: Schema.Types.ObjectId, ref: "User" },
-    catalogId: [{ type: Schema.Types.ObjectId, ref: "Catalog" }],
-    productId: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    buyerId: { type: Schema.Types.ObjectId, ref: "User" },
+    sellerId: { type: Schema.Types.ObjectId, ref: "User" },
+    catalog: { type: Schema.Types.ObjectId, ref: "Catalog" },
+    products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   },
   {
     timestamps: {

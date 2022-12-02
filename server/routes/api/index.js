@@ -17,5 +17,10 @@ router.get(
   isLoggedIn,
   buyerCtrl.getSellerCatalog
 );
+router.post(
+  "/buyer/create-order/:seller_id",
+  isLoggedIn,
+  buyerCtrl.createOrder
+);
 
 module.exports = router;
