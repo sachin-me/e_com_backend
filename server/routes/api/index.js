@@ -5,12 +5,17 @@ const buyerCtrl = require("../../controller/buyer.controller");
 const { isLoggedIn } = require("../../auth");
 
 const router = express.Router();
+
+// User authentication APIs
 router.post("/auth/register", userCtrl.register);
 router.post("/auth/login", userCtrl.login);
 router.post("/auth/logout", userCtrl.logout);
 
+// Seller APIs
 router.post("/seller/create-catalog", isLoggedIn, sellerCtrl.createCatalog);
+router.get("/seller/orders", isLoggedIn, sellerCtrl.getOrders);
 
+// Buyer APIs
 router.get("/buyer/list-of-sellers", isLoggedIn, buyerCtrl.getSellersList);
 router.get(
   "/buyer/seller-catalog/:seller_id",
