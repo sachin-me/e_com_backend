@@ -5,7 +5,7 @@
 2- run `npm install` command to install the required packages.
 
 3- add `.env` file to root of the project
-  - It contains 4 fields
+  - It contains 3 fields
   - MONGO_URI (To create database connection)
   - PORT (App will run on given port)
   - SECRET (To autheticate user via jwt token)
